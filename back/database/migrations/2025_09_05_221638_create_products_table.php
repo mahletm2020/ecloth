@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id(); // BIGINT UNSIGNED
-    $table->string('name');
-    $table->text('description');
-    $table->decimal('price', 8, 2);
-    $table->string('image_url')->nullable();
-    $table->timestamps();
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 8, 2);
+            $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.
