@@ -1,14 +1,14 @@
 <?php
 
-use App\Http\Controllers\AuhController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
-Route::post('/register', [AuhController::class, 'register']);
-Route::post('/login', [AuhController::class, 'login']);
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/products', [ProductController::class, 'index']);
 
