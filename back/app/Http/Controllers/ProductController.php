@@ -7,49 +7,52 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // List all products
     public function index()
     {
-        return Product::all();
+        return response()->json(Product::all());
     }
-/**
-     * Store a newly created resource in storage.
-     */
+
+    // Show single product
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return response()->json($product);
+    }
+
+    // Add new product (admin only)
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'name'  => 'required|string|max:255',
             'price' => 'required|numeric',
         ]);
 
-        return Product::create($request->all());
-    }
-    
+        $product = Product::create([
+            'name'        => $request->name,
+            'price'       => $request->price,
+            'description' => $request->description ?? '',
+        ]);
 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return response()->json($product, 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Update product (admin only)
+    public function update(Request $request, $id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $product->update($request->only(['name', 'price', 'description']));
+
+        return response()->json($product);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Delete product (admin only)
+    public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted']);
     }
 }

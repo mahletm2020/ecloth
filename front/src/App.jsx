@@ -1,24 +1,48 @@
-import { useContext } from "react";
-import { AuthContext } from "./contexts/AuthContext";
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home";
+import Explore from "./pages/Explore";
+import ProductDetail from "./pages/ProductDetail";
+import AddProduct from "./pages/Admin/AddProduct";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { useAuth } from "./contexts/AuthContext";
+import MainLayout from "./layouts/MainLayout";
 
-export default function App() {
-  const { user, logout } = useContext(AuthContext);
+function App() {
+  const { user } = useAuth();
+
+  // Protect routes
+  const PrivateRoute = ({ children, role }) => {
+    if (!user) return <Navigate to="/login" replace />;
+    if (role && user.role !== role) return <Navigate to="/explore" replace />;
+    return children;
+  };
 
   return (
-    <div>
-      {user ? (
-        <>
-          <h1>Welcome {user.name} ({user.role})</h1>
-          <button onClick={logout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <Login />
-          <Register />
-        </>
-      )}
-    </div>
+    
+      <MainLayout>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Protected (admin-only) route */}
+          <Route
+            path="/add-product"
+            element={
+              <PrivateRoute role="admin">
+                <AddProduct />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </MainLayout>
+   
   );
 }
+
+export default App;

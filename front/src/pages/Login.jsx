@@ -1,9 +1,12 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Login() {
   const { login } = useContext(AuthContext);
   const [form, setForm] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,6 +15,7 @@ export default function Login() {
     e.preventDefault();
     try {
       await login(form.email, form.password);
+      navigate("/explore");
       alert("Login successful!");
     } catch (err) {
       alert("Login failed");

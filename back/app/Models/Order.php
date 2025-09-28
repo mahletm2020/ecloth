@@ -14,6 +14,7 @@ class Order extends Model
         'product_id',
         'quantity',
         'status',
+        'color'
     ];
 
     // An order belongs to a user
