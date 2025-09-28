@@ -26,16 +26,25 @@ class ProductController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
+    
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public'); 
+        }
+    
         $product = Product::create([
             'name'        => $request->name,
             'price'       => $request->price,
             'description' => $request->description ?? '',
+            'color'       => $request->color ?? [],'#000000',
+            'image'       => $imagePath,
         ]);
-
+    
         return response()->json($product, 201);
     }
+    
 
     // Update product (admin only)
     public function update(Request $request, $id)

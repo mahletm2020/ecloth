@@ -11,12 +11,14 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'description',
         'price',
-        'color', 
+        'description',
+        'color',
         'image',
     ];
-
+    protected $casts = [
+        'color' => 'array', // cast JSON to array automatically
+    ];
 
     // A product can have many orders
     public function orders()
