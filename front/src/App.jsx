@@ -8,10 +8,15 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { useAuth } from "./contexts/AuthContext";
 import MainLayout from "./layouts/MainLayout";
+import Cart from "./pages/Cart";
+import Profile from "./pages/Profile";
 
 function App() {
   const { user } = useAuth();
 
+
+  
+  
   // Protect routes
   const PrivateRoute = ({ children, role }) => {
     if (!user) return <Navigate to="/login" replace />;
@@ -29,6 +34,10 @@ function App() {
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile/>} />
+
+
 
           {/* Protected (admin-only) route */}
           <Route
