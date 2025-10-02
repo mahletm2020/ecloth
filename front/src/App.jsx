@@ -10,6 +10,7 @@ import { useAuth } from "./contexts/AuthContext";
 import MainLayout from "./layouts/MainLayout";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
+import EditProduct from "./pages/Admin/Editproduct";
 
 function App() {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/products/:id/edit" element={<EditProduct />} />
 
 
 

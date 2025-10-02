@@ -17,25 +17,31 @@ export default function Cart() {
   };
 
   return (
-    <div className="p-5">
-      <h2 className="text-2xl font-bold">🛒 Your Cart</h2>
+    <div className="min-h-screen bg-gray-50 py-10 px-6">
+      <h2 className="text-3xl font-bold text-center mb-8 text-green-700">
+        🛒 Your Cart
+      </h2>
 
       {cart.length === 0 ? (
-        <p>No items in cart</p>
+        <div className="text-center text-gray-500 text-lg">
+          No items in your cart yet.
+        </div>
       ) : (
-        <div>
-          <ul>
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-md p-6">
+          <ul className="divide-y divide-gray-200">
             {cart.map((item) => (
-              <li key={item.id} className="border-b py-2 flex justify-between">
-                  <span>
-                    {/* Safe check: if product missing, fallback */}
-                    {item.product
-                      ? `${item.product.name} - ${item.quantity} × $${item.product.price}`
-                      : `Product ID: ${item.product_id} - ${item.quantity}`}
-                  </span>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="text-red-500 hover:underline"
+              <li
+                key={item.id}
+                className="py-4 flex justify-between items-center"
+              >
+                <span className="text-gray-800 font-medium">
+                  {item.product
+                    ? `${item.product.name} — ${item.quantity} × $${item.product.price}`
+                    : `Product ID: ${item.product_id} — ${item.quantity}`}
+                </span>
+                <button
+                  onClick={() => removeFromCart(item.id)}
+                  className="text-red-500 hover:text-red-700 font-medium transition"
                 >
                   Remove
                 </button>
@@ -43,12 +49,14 @@ export default function Cart() {
             ))}
           </ul>
 
-          <button
-            onClick={handleCheckout}
-            className="mt-5 bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Checkout
-          </button>
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={handleCheckout}
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition"
+            >
+              Checkout
+            </button>
+          </div>
         </div>
       )}
     </div>

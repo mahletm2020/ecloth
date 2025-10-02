@@ -50,11 +50,32 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-
-        $product->update($request->only(['name', 'price', 'description']));
-
+    
+        // validate fields
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'color' => 'nullable|string'
+        ]);
+    
+        // if new image is uploaded
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+            $product->image = $imagePath;
+        }
+    
+        // update text fields
+        $product->name        = $request->name;
+        $product->price       = $request->price;
+        $product->description = $request->description ?? $product->description;
+        $product->color       = $request->color ?? $product->color;
+    
+        $product->save();
+    
         return response()->json($product);
     }
+    
 
     // Delete product (admin only)
     public function destroy($id)

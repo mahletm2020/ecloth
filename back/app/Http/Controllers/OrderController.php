@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+// use App\Models\Order;
 use App\Models\Order;
+
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -13,9 +15,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Auth::user()->orders()->with('product')->get();
+        if (Auth::check()) {
+            return Auth::user()->orders()->with('product')->get();
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
     }
-    
 
 
     /**
@@ -63,4 +68,3 @@ class OrderController extends Controller
 
 
 
-//stoped at variant damass

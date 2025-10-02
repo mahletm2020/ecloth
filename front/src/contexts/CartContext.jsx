@@ -6,7 +6,7 @@ import { useAuth } from "./AuthContext";
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const { user } = useAuth(); // requires AuthProvider above CartProvider
+  const { user } = useAuth();
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +18,9 @@ export const CartProvider = ({ children }) => {
     }
     try {
       setLoading(true);
-      const { data } = await axiosClient.get("/cart");
+      // ✅ Destructure data here
+      const response = await axiosClient.get("/cart");
+      const data = response.data; // safer
       setCart(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("refreshCart error:", err);
@@ -28,27 +30,22 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // auto refresh when user changes (login/logout)
   useEffect(() => {
     refreshCart();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // add item to cart (server-side)
   const addToCart = async (product_id, quantity = 1) => {
     if (!user) throw new Error("You must be logged in to add to cart");
     try {
-      const { data } = await axiosClient.post("/cart", { product_id, quantity });
-      // on success, refresh cart list from server
-      await refreshCart();
-      return data;
+      await axiosClient.post("/cart", { product_id, quantity });
+      await refreshCart(); // refresh cart after add
     } catch (err) {
       console.error("addToCart error:", err);
       throw err;
     }
   };
 
-  // remove cart item (cart item id is used)
   const removeFromCart = async (cartItemId) => {
     try {
       await axiosClient.delete(`/cart/${cartItemId}`);
@@ -60,7 +57,9 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, loading, refreshCart, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ cart, loading, refreshCart, addToCart, removeFromCart }}
+    >
       {children}
     </CartContext.Provider>
   );

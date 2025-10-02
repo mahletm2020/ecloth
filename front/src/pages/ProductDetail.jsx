@@ -78,8 +78,7 @@ const ProductDetail = () => {
                     Delete
                   </button>
                   <button
-                    onClick={() => navigate(`/edit-product/${id}`)}
-                    className="px-5 py-2 rounded-lg bg-yellow-500 text-white font-medium hover:bg-yellow-600 transition-colors"
+ onClick={() => navigate(`/products/${product.id}/edit`)}                    className="px-5 py-2 rounded-lg bg-yellow-500 text-white font-medium hover:bg-yellow-600 transition-colors"
                   >
                     Edit
                   </button>
