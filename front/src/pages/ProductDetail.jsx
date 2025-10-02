@@ -75,7 +75,8 @@ const ProductDetail = () => {
                     onClick={handleDelete}
                     className="px-5 py-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition-colors"
                   >
-                    Delete
+
+                    Delete btn
                   </button>
                   <button
  onClick={() => navigate(`/products/${product.id}/edit`)}                    className="px-5 py-2 rounded-lg bg-yellow-500 text-white font-medium hover:bg-yellow-600 transition-colors"
