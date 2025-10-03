@@ -44,6 +44,7 @@ const Navbar = () => {
             </Link>
 
             {/* Cart with badge */}
+           { user ?(
             <Link
               to="/cart"
               className="relative flex items-center gap-1 text-gray-700 hover:text-black transition"
@@ -56,6 +57,9 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
+            ): null
+          }
+
 
             {user ? (
               <>

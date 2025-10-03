@@ -11,13 +11,11 @@ import MainLayout from "./layouts/MainLayout";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import EditProduct from "./pages/Admin/Editproduct";
+import AdminOrderPage from "./pages/Admin/Orders";
 
 function App() {
   const { user } = useAuth();
 
-
-  
-  
   // Protect routes
   const PrivateRoute = ({ children, role }) => {
     if (!user) return <Navigate to="/login" replace />;
@@ -26,33 +24,38 @@ function App() {
   };
 
   return (
-    
-      <MainLayout>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/profile" element={<Profile/>} />
-          <Route path="/products/:id/edit" element={<EditProduct />} />
+    <MainLayout>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/products/:id/edit" element={<EditProduct />} />
 
+        {/* Protected (admin-only) routes */}
+        <Route
+          path="/add-product"
+          element={
+            <PrivateRoute role="admin">
+              <AddProduct />
+            </PrivateRoute>
+          }
+        />
 
-
-          {/* Protected (admin-only) route */}
-          <Route
-            path="/add-product"
-            element={
-              <PrivateRoute role="admin">
-                <AddProduct />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </MainLayout>
-   
+        <Route
+          path="/admin/orders"
+          element={
+            <PrivateRoute role="admin">
+              <AdminOrderPage />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </MainLayout>
   );
 }
 

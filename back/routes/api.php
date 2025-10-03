@@ -8,9 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
+
+
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/admin/orders', [OrderController::class, 'allOrders']); 
+});
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -20,8 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy']);
 
     // Orders
-    Route::get('/orders', [OrderController::class, 'index']);
-    Route::post('/orders', [OrderController::class, 'store']);
+//     Route::get('/orders', [OrderController::class, 'index']);
+//     Route::post('/orders', [OrderController::class, 'store']);
 });
 
 

@@ -8,3 +8,14 @@ body {
   @apply antialiased text-gray-900 bg-white;
   font-family: 'Inter', sans-serif;
 }
+
+
+.mask-ripped-paper {
+  mask-image: url('https://i.imgur.com/KflKNvY.png'); /* ripped mask image */
+  mask-repeat: no-repeat;
+  mask-size: cover;
+  -webkit-mask-image: url('https://i.imgur.com/KflKNvY.png');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: cover;
+}
+

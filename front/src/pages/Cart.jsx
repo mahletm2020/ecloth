@@ -1,14 +1,31 @@
-// src/pages/Cart.jsx
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
+import axios from "axios";
 
 export default function Cart() {
   const { cart, removeFromCart } = useCart();
   const navigate = useNavigate();
 
-  const handleCheckout = async () => {
+  // navigate with product ID
+  const goToProductDetail = (productId) => {
+    navigate(`/productDetail/${productId}`);
+  };
+
+  // checkout for one item only
+  const handleCheckout = async (item) => {
     try {
-      alert("Order placed successfully!");
+      // send order request to backend
+      await axios.post("http://localhost:8000/api/orders", {
+        product_id: item.product?.id || item.product_id,
+        quantity: item.quantity,
+      });
+
+      alert(`${item.product?.name || "Product"} ordered successfully!`);
+
+      // after checkout, remove from cart
+      removeFromCart(item.id);
+
+      // go to Orders page for user
       navigate("/orders");
     } catch (err) {
       console.error(err);
@@ -34,29 +51,45 @@ export default function Cart() {
                 key={item.id}
                 className="py-4 flex justify-between items-center"
               >
-                <span className="text-gray-800 font-medium">
-                  {item.product
-                    ? `${item.product.name} — ${item.quantity} × $${item.product.price}`
-                    : `Product ID: ${item.product_id} — ${item.quantity}`}
-                </span>
-                <button
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-500 hover:text-red-700 font-medium transition"
+                {/* Product info with image */}
+                <div
+                  className="flex items-center gap-4 cursor-pointer"
+                  onClick={() =>
+                    goToProductDetail(item.product?.id || item.product_id)
+                  }
                 >
-                  Remove
-                </button>
+                  <img
+                    src={item.product?.image || "/placeholder.png"}
+                    alt={item.product?.name || "Product"}
+                    className="w-16 h-16 object-cover rounded-md border"
+                  />
+                  <span className="text-gray-800 font-medium">
+                    {item.product
+                      ? `${item.product.name} — ${item.quantity} × $${item.product.price}`
+                      : `Product ID: ${item.product_id} — ${item.quantity}`}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {/* Checkout one item */}
+                  <button
+                    onClick={() => handleCheckout(item)}
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1 rounded-lg transition"
+                  >
+                    Checkout
+                  </button>
+
+                  {/* Remove button */}
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="text-red-500 hover:text-red-700 font-medium transition"
+                  >
+                    Remove
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
-
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={handleCheckout}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition"
-            >
-              Checkout
-            </button>
-          </div>
         </div>
       )}
     </div>

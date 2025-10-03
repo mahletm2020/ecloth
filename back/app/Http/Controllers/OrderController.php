@@ -30,16 +30,32 @@ class OrderController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity'   => 'required|integer|min:1',
         ]);
-
-        return Order::create([
+    
+        $product = \App\Models\Product::findOrFail($request->product_id);
+    
+        // Create the order
+        $order = Order::create([
             'user_id' => Auth::id(),
-            'product_id' => $request->product_id,
-            'quantity' => $request->quantity,
-            'status' => 'pending',
+            'total'   => 0,
+            'status'  => 'pending',
         ]);
+    
+        // Create the order item with price snapshot
+        $order->items()->create([
+            'product_id' => $product->id,
+            'quantity'   => $request->quantity,
+            'price'      => $product->price,
+        ]);
+    
+        // Calculate total
+        $total = $order->items->sum(fn($item) => $item->quantity * $item->price);
+        $order->update(['total' => $total]);
+    
+        return response()->json($order->load('items.product'), 201);
     }
+    
 
     /**
      * Display the specified resource.
@@ -64,6 +80,13 @@ class OrderController extends Controller
     {
         //
     }
+
+    public function allOrders()
+{
+    // ( might add admin check here later)
+    return Order::with(['user', 'items.product'])->latest()->get();
+}
+
 }
 
 
