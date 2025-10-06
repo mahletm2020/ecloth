@@ -12,6 +12,8 @@ use App\Http\Controllers\AuthController;
 
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::get('/products', [ProductController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/profile', [AuthController::class, 'profile']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/orders', [OrderController::class, 'allOrders']); 
@@ -39,7 +41,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
 // Both admin and user can view products
 Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {
-    Route::get('/products', [ProductController::class, 'index']);
+    // Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
 });
 

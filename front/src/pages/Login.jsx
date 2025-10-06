@@ -16,7 +16,7 @@ export default function Login() {
     try {
       await login(form.email, form.password);
       navigate("/explore");
-      alert("Login successful!");
+      // alert("Login successful!");
     } catch (err) {
       alert("Login failed");
     }
